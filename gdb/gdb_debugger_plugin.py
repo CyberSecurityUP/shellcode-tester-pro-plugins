@@ -16,13 +16,13 @@ def register(app):
     layout.addWidget(gdb_output)
 
     gdb_input = QTextEdit()
-    gdb_input.setPlaceholderText("Digite comandos GDB aqui e pressione Enter ou use os botões abaixo...")
+    gdb_input.setPlaceholderText("Type GDB commands here and press Enter or use the buttons below...")
     gdb_input.setStyleSheet("background-color: #111; color: white; font-family: monospace;")
     gdb_input.setFixedHeight(60)
     layout.addWidget(gdb_input)
 
     command_layout = QHBoxLayout()
-    load_btn = QPushButton("📂 Carregar Executável")
+    load_btn = QPushButton("📂 Load Executable")
     run_btn = QPushButton("▶️ run")
     info_btn = QPushButton("ℹ️ info functions")
     disas_btn = QPushButton("🧠 disassemble main")
@@ -42,16 +42,16 @@ def register(app):
 
     def run_gdb_command(command):
         if not binary_loaded['path']:
-            gdb_output.append("[!] Nenhum arquivo carregado.")
+            gdb_output.append("[!] No file loaded.")
             return
         gdb_output.append(f">>> {command}")
         process.write((command + "\n").encode())
 
     def load_executable():
-        file, _ = QFileDialog.getOpenFileName(None, "Selecionar binário", "", "Executáveis (*.elf *.bin *.exe *.out)")
+        file, _ = QFileDialog.getOpenFileName(None, "Select binary", "", "Executables (*.elf *.bin *.exe *.out)")
         if file:
             binary_loaded['path'] = file
-            gdb_output.append(f"[+] Carregado: {file}")
+            gdb_output.append(f"[+] Loaded: {file}")
             process.start("gdb", [file])
             process.readyReadStandardOutput.connect(lambda: gdb_output.append(process.readAllStandardOutput().data().decode()))
             process.readyReadStandardError.connect(lambda: gdb_output.append(process.readAllStandardError().data().decode()))
